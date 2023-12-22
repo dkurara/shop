@@ -1,3 +1,19 @@
+<?php
+session_start();
+session_regenerate_id(true);
+if(isset($_SESSION['login'])==false)
+{
+    print 'ログインされていません。 <br />';
+    print '<a href="../staff_login/staff_login.html">ログイン画面へ</a>';
+    exit();
+}
+else
+{
+    print "{$_SESSION['staff_name']}さんログイン中<br />";
+    print '<br />';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="jp">
 <head>
@@ -12,15 +28,15 @@
 try
 {
 
-$staff_name=$_POST['name'];
-$staff_pass=$_POST['pass'];
+require_once('../common/common.php');
 
-$staff_name = htmlspecialchars($staff_name,ENT_QUOTES,'UTF-8');
-$staff_pass = htmlspecialchars($staff_pass,ENT_QUOTES,'UTF-8');
+$post=sanitize($_POST);
+$staff_name=$post['name'];
+$staff_pass=$post['pass'];
 
 $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
 $user = 'root';
-$password = '';
+$password = '12345';
 $dbh = new PDO($dsn, $user, $password);
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $sql = 'INSERT INTO mst_staff(name,password) VALUES (?,?)';

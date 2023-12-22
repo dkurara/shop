@@ -1,3 +1,19 @@
+<?php
+session_start();
+session_regenerate_id(true);
+if(isset($_SESSION['login'])==false)
+{
+    print 'ログインされていません。 <br />';
+    print '<a href="../staff_login/staff_login.html">ログイン画面へ</a>';
+    exit();
+}
+else
+{
+    print "{$_SESSION['staff_name']}さんログイン中<br />";
+    print '<br />';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="jp">
 <head>
@@ -9,13 +25,12 @@
 
 <?php
 
-$pro_code=$_POST['code'];
-$pro_name=$_POST['name'];
-$pro_price=$_POST['price'];
+require_once('../common/common.php');
 
-$pro_code=htmlspecialchars($pro_code,ENT_QUOTES,'UTF-8');
-$pro_name=htmlspecialchars($pro_name,ENT_QUOTES,'UTF-8');
-$pro_price=htmlspecialchars($pro_price,ENT_QUOTES,'UTF-8');
+$post=sanitize($_POST);
+$pro_code=$post['code'];
+$pro_name=$post['name'];
+$pro_price=$post['price'];
 
 if($pro_name=='')
 {
@@ -44,7 +59,8 @@ if($pro_name==''||preg_match('/\A[0-9]+\z/',$pro_price)==0)
 else
 {
     print '上記のように変更します。 <br />';
-    print '<form method="post" action="pro_add_done.php">';
+    print '<form method="post" action="pro_edit_done.php">';
+    print '<input type="hidden" name="code" value="'.$pro_code.'">';
     print '<input type="hidden" name="name" value="'.$pro_name.'">';
     print '<input type="hidden" name="price" value="'.$pro_price.'">';
     print '<br />';

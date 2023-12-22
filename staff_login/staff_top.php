@@ -19,12 +19,17 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商品未選択</title>
+    <title>トッフ画面</title>
 </head>
 <body>
     
-商品が選択されていません。 <br />
-<a href="pro_list.php">戻る</a>
+ショップ管理トップメニュー<br />
+<br />
+<a href="../staff/staff_list.php">スタッフ管理</a><br />
+<br />
+<a href="../product/pro_list.php">商品管理</a><br />
+<br />
+<a href="staff_logout.php">ログアウト</a><br />
 
 </body>
 </html>

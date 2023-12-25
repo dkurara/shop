@@ -3,7 +3,7 @@ session_start();
 session_regenerate_id(true);
 if(isset($_SESSION['member_login'])==false)
 {
-    print 'ようこそゲスト様 ';
+    print 'ようこそゲスト様　';
     print '<a href="member_login.html">会員ログイン</a><br />';
     print '<br />';
 }
@@ -11,7 +11,7 @@ else
 {
     print 'ようこそ';
     print $_SESSION['member_name'];
-    print '様 ';
+    print '様　';
     print '<a href="member_logout.php">ログアウト</a><br />';
     print '<br />';
 }
@@ -22,7 +22,7 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商品リスト</title>
+    <title>商品詳細</title>
 </head>
 <body>
 
@@ -31,45 +31,52 @@ else
 try
 {
 
-$dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
+$pro_code=$_GET['procode'];
+
+$dsn ='mysql:dbname=shop;host=localhost;charset=utf8';
 $user = 'root';
 $password = '12345';
-$dbh = new PDO($dsn,$user,$password);
+$dbh = new PDO($dsn, $user, $password);
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$sql = 'SELECT code,name,price FROM mst_product WHERE 1';
+$sql = 'SELECT name,price FROM mst_product WHERE code=?';
 $stmt = $dbh->prepare($sql);
-$stmt->execute();
+$data[] = $pro_code;
+$stmt->execute($data);
+
+$rec = $stmt->fetch(PDO::FETCH_ASSOC);
+$pro_name=$rec['name'];
+$pro_price=$rec['price'];
 
 $dbh = null;
 
-print '商品一覧 <br /><br />';
 
-while(true)
-{
-    $rec = $stmt->fetch(PDO::FETCH_ASSOC);
-    if($rec==false)
-    {
-        break;
-    }
-    print '<a href="shop_product.php?procode='.$rec['code'].'">';
-    print $rec['name'].'---';
-    print $rec['price'].'円';
-    print '</a>';
-    print '<br />';
-}
-
-    print '<br />';
-    print '<a href="shop_cartlook.php">カートを見る</a><br />';
-    
 }
 catch (Exception $e)
 {
     print 'ただいま障害により大変ご迷惑をお掛けしております。';
     exit();
-}   
+}
+
+print '<a href="shop_cartin.php?procode='.$pro_code.'">カートに入れる</a><br /><br />';
 
 ?>
+
+商品情報 <br />
+<br />
+商品コード <br />
+<?= $pro_code; ?>
+<br />
+商品名 <br />
+<?=$pro_name; ?>
+<br />
+価格 <br />
+<?=$pro_price; ?> 円
+<br />
+<br />
+<form>
+ <input type="button" onclick="history.back()" value="戻る">
+</form>
 
 </body>
 </html>

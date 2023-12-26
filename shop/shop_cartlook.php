@@ -59,7 +59,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 foreach($cart as $key => $val)
 {
-    $sql = 'SELECT code,name,price FROM mst_product WHERE code=?';
+    $sql = 'SELECT code,name,price,pic FROM mst_product WHERE code=?';
     $stmt = $dbh->prepare($sql);
     $data[0]=$val;
     $stmt->execute($data);
@@ -68,7 +68,16 @@ foreach($cart as $key => $val)
 
     $pro_name[]=$rec['name'];
     $pro_price[]=$rec['price'];
+    if($rec['pic']=='')
+    {
+        $pro_gazou='';
+    }
+    else
+    {
+        $pro_gazou[]='<img src="../product/gazou/'.$rec['pic'].'">';
+    }
 }
+
 $dbh = null;
 
 
@@ -83,24 +92,38 @@ catch (Exception $e)
 
 カートの中身 <br />
 <br />
+<table border="1">
+<tr>
+<td>商品</td>
+<td>商品画像</td>
+<td>価格</td>
+<td>数量</td>
+<td>小計</td>
+<td>削除</td>
+</tr>
 <form method="post" action="kazu_change.php">
 <?php for($i=0;$i<$max;$i++)
 {
 ?>
-    <?=$pro_name[$i]; ?>
-    <?=$pro_price[$i].'円'; ?>
-    <input type="text" name="kazu<?=$i; ?>" value="<?=$kazu[$i]; ?>">
-    <?=$pro_price[$i]*$kazu[$i]; ?>円
-    <input type="checkbox" name="sakujo<?=$i; ?>">
-    <br />
+<tr>
+    <td><?=$pro_name[$i]; ?></td>
+    <td><?=$pro_gazou[$i]; ?></td>
+    <td><?=$pro_price[$i].'円'; ?></td>
+    <td><input type="text" name="kazu<?=$i; ?>" value="<?=$kazu[$i]; ?>"></td>
+    <td><?=$pro_price[$i]*$kazu[$i]; ?>円</td>
+    <td><input type="checkbox" name="sakujo<?=$i; ?>"></td>
+</tr>
 <?php
 }
 ?>
+</table>
 <form>
 <input type="hidden" name="max" value="<?=$max; ?>">
 <input type="submit" value="数量変更"><br />
  <input type="button" onclick="history.back()" value="戻る">
 </form>
+<br />
+<a href="shop_form.html">ご購入手続きに進む</a><br />
 
 </body>
 </html>

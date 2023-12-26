@@ -34,21 +34,31 @@ $post=sanitize($_POST);
 $pro_code=$post['code'];
 $pro_name=$post['name'];
 $pro_price=$post['price'];
+$pro_gazou_name_old=$post['gazou_name_old'];
+$pro_gazou_name=$post['gazou_name'];
 
 $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
 $user = 'root';
 $password = '12345';
 $dbh = new PDO($dsn, $user, $password);
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$sql = 'UPDATE mst_product SET name = ?, price = ? WHERE code = ?';
+$sql = 'UPDATE mst_product SET name = ?, price = ?, pic = ? WHERE code = ?';
 $stmt = $dbh->prepare($sql);
 $data[] = $pro_name;
 $data[] = $pro_price;
+$data[] = $pro_gazou_name;
 $data[] = $pro_code;
 $stmt->execute($data);
 
 $dbh = null;
 
+if($pro_gazou_name_old != $pro_gazou_name)
+{
+    if($pro_gazou_name_old !='')
+    {
+        unlink('./gazou/'.$pro_gazou_name_old);
+    }
+}
 print "修正しました。 <br />";
 
 }

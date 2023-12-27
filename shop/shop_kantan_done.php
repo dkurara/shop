@@ -1,6 +1,12 @@
 <?php
     session_start();
     session_regenerate_id(true);
+    if(isset($_SESSION['member_login'])==false)
+    {
+        print 'ログインされていません。<br />';
+        print '<a href="shop_list.php">商品一覧へ</a>';
+        exit();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -24,10 +30,6 @@ $postal1=$post['postal1'];
 $postal2=$post['postal2'];
 $address=$post['address'];
 $tel=$post['tel'];
-$chumon=$post['chumon'];
-$pass=$post['pass'];
-$danjo=$post['danjo'];
-$birth=$post['birth'];
 
 print $onamae.'様<br />';
 print 'ご注文ありがとうございました。<br />';
@@ -78,36 +80,7 @@ $sql='LOCK TABLES dat_sales WRITE, dat_sales_product WRITE, dat_member WRITE';
 $stmt=$dbh->prepare($sql);
 $stmt->execute();
 
-$lastmembercode=0;
-if($chumon=='chumontouroku')
-{
-    $sql='INSERT INTO dat_member (password,name,email,postal1,postal2,address,tel,danjo,born) VALUES (?,?,?,?,?,?,?,?,?)';
-    $stmt = $dbh->prepare($sql);
-    $data=array();
-    $data[]=md5($pass);
-    $data[]=$onamae;
-    $data[]=$email;
-    $data[]=$postal1;
-    $data[]=$postal2;
-    $data[]=$address;
-    $data[]=$tel;
-    if($danjo=='dan')
-    {
-        $data[]=1;
-    }
-    else
-    {
-        $data[]=2;
-    }
-    $data[]=$birth;
-    $stmt->execute($data);
-
-    $sql='SELECT LAST_INSERT_ID()';
-    $stmt=$dbh->prepare($sql);
-    $stmt->execute();
-    $rec=$stmt->fetch(PDO::FETCH_ASSOC);
-    $lastmembercode=$rec['LAST_INSERT_ID()'];
-}
+$lastmembercode=$_SESSION['member_code'];
 
 $sql='INSERT INTO dat_sales (code_member,name,email,postal1,postal2,address,tel) VALUES (?,?,?,?,?,?,?)';
 $stmt=$dbh->prepare($sql);
@@ -145,13 +118,6 @@ $stmt->execute();
 
 $dbh=null;
 
-if($chumon=='chumontouroku')
-{
-    print '会員登録が完了しました。<br />';
-    print '次回からメールアドレスとパスワードでログインしてください。<br />';
-    print 'ご注文が簡単にできるようになります。<br />';
-    print '<br />';
-}
 $honbun.="送料は無料です。\n";
 $honbun.="--------------------\n";
 $honbun.="\n";
@@ -159,14 +125,6 @@ $honbun.="代金は以下の口座にお振込みください。\n";
 $honbun.="ろくまる銀行 やさい支店 普通口座 1234567\n";
 $honbun.="入金確認が取れ次第、梱包、発送させていただきます。\n";
 $honbun.="\n";
-
-if($chumon=='chumontouroku')
-{
-    $honbun.="会員登録が完了しました。\n";
-    $honbun.="次回からメールアドレスとパスワードでログインしてください。\n";
-    $honbun.="ご注文が簡単にできるようになります。\n";
-    $honbun.="\n";
-}
 
 $honbun.="□□□□□□□□□□□□□□\n";
 $honbun.=" ～安心野菜のろくまる農園～\n";

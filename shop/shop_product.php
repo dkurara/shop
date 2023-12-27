@@ -39,7 +39,7 @@ $password = '12345';
 $dbh = new PDO($dsn, $user, $password);
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$sql = 'SELECT name,price FROM mst_product WHERE code=?';
+$sql = 'SELECT name,price,pic FROM mst_product WHERE code=?';
 $stmt = $dbh->prepare($sql);
 $data[] = $pro_code;
 $stmt->execute($data);
@@ -47,15 +47,24 @@ $stmt->execute($data);
 $rec = $stmt->fetch(PDO::FETCH_ASSOC);
 $pro_name=$rec['name'];
 $pro_price=$rec['price'];
+$pro_gazou_name=$rec['pic'];
 
 $dbh = null;
-
 
 }
 catch (Exception $e)
 {
     print 'ただいま障害により大変ご迷惑をお掛けしております。';
     exit();
+}
+
+if($pro_gazou_name=='')
+{
+    $disp_gazou='';
+}
+else
+{
+    $disp_gazou='<img src="../product/gazou/'.$pro_gazou_name.'">';
 }
 
 print '<a href="shop_cartin.php?procode='.$pro_code.'">カートに入れる</a><br /><br />';
@@ -72,6 +81,8 @@ print '<a href="shop_cartin.php?procode='.$pro_code.'">カートに入れる</a>
 <br />
 価格 <br />
 <?=$pro_price; ?> 円
+<br />
+<?=$disp_gazou; ?>
 <br />
 <br />
 <form>

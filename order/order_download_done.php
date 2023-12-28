@@ -56,10 +56,10 @@ SELECT
     dat_sales_product.price,
     dat_sales_product.quantity
 FROM
-	dat_sales, dat_sales_product,mst_product
+	dat_sales,dat_sales_product,mst_product
 WHERE
 	dat_sales.code=dat_sales_product.code_sales
-    AND dat_sales_product.code_sales=mst_product.code
+    AND dat_sales_product.code_product=mst_product.code
     AND substr(dat_sales.date,1,4)=?
     AND substr(dat_sales.date,6,2)=?
     AND substr(dat_sales.date,9,2)=?

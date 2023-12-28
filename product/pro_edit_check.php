@@ -19,7 +19,7 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>修正してください</title>
+    <title>商品修正</title>
 </head>
 <body>
 

@@ -19,7 +19,7 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>スタッフ登録</title>
+    <title>スタッフ消去</title>
 </head>
 <body>
     
